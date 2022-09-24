@@ -14,7 +14,9 @@
 
 ## Overview of Terminal Application
 
-The purpose of this terminal application is to recreate the popular game of minesweeper that can be played within the terminal.
+The purpose of this terminal application is to recreate the popular game of Minesweeper that can be played within the terminal. The goal of Minesweeper is to reveal all the empty tiles on a grid, without revealing any mines that are hidden throughout the grid. The game ends when all the empty tiles are cleared on the grid, or when a mine is revealed. 
+
+This terminal application will aim to reproduce these key game mechanics, as well as implement features such as the ability to place flags, a functional timer, and multiple difficulty options.
 
 ## Features (R6)
 
