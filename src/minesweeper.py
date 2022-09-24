@@ -9,6 +9,8 @@ class Board:
         self.dimensions = dimensions
         self.max_mines = max_mines
         self.board = self.createboard()
+        self.show_adjacent_mines()
+        self.click_history = set()
 
     # Generate the board as a list of lists
     def createboard(self):
@@ -56,24 +58,28 @@ class Board:
                     continue
                 self.board[row][col]= self.check_mines(row,col)
 
-# print(createboard(9,10))
+    def click(self, row, col):
+        self.click_history.add((row,col))
+        if self.board[row][col] == '@':
+            return False
+        elif self.board[row][col] > 0:
+            return True
+        
+        for r in range(max(0, row-1), min(self.dimensions-1, row+1)+1):
+            for c in range(max(0,col-1), min(self.dimensions-1, col+1)+1):
+                if (r,c) in self.click_history:
+                    continue
+                self.click(r,c)
 
-# def startgame(dimensions, max_mines):
-#     board = Board(dimensions, max_mines)
-
-# startgame(10,10)
-
-# Dig function
-# def dig(row, col):
-#     #First create set to track the coordinates that have been entered
-#     dig_history = {}
-#     # If dug on a space with a mine, game is over
-#     if board[row][col] == '@':
-#         end_game()
-#     # If dug on a space without a mine, show the number of mines around the space
-#     pass
-
-
+    def __str__(self):
+        player_board = [[' ' for i in range(self.dimensions)] for j in range(self.dimensions)]
+        for row in range(self.dimensions):
+            for col in range(self.dimensions):
+                if (row,col) in self.click_history:
+                    player_board[row][col] = str(self.board[row][col])
+                else:
+                    player_board[row][col] = ' '
+                
 # Flag function
 
 # Timer function
