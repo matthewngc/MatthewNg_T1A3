@@ -144,7 +144,7 @@ def play():
     # Create a new board with random mines based on user input
     newboard = createboard(dimensions, max_mines)
     #print(newboard) #DEBUG
-
+    start_time = time.time()
     safe = True
     input_history = set()
     # Create a board that the player sees and updates when spaces are revealed
@@ -152,7 +152,6 @@ def play():
     while len(input_history) < dimensions ** 2 - max_mines:
         os.system("clear")
         display(player_board)
-        start_time = time.time()
         user_input = re.split(r",\s*", input("Please enter a coordinate (row,column).\n To place a flag, type F after the coordinate (row,column,F) \n"))
         row, col, flag = int(user_input[0])-1, int(user_input[1])-1, user_input[-1]
         if row < 0 or row >= dimensions or col < 0 or col >= dimensions:
