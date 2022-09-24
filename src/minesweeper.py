@@ -3,6 +3,7 @@
 import random
 import os
 import re
+import time
 
 # Generate the board as a list of lists (this board is hidden from the player)
 def createboard(dimensions, max_mines):
@@ -63,6 +64,10 @@ def show_adjacent_mines(dimensions, board):
 
 # When a space is clicked on, reveal the space
 def clickspace(player_board, dimensions, newboard, row, col, input_history):
+    if player_board[row][col] == 'F':
+        print("There is a flag here! Enter 'F' after the coordinate to remove the flag (row,col,F).")
+        press_to_continue()
+        return True
     # Add the coordinate entered to the input history to track what spaces have been clicked on
     input_history.add((row,col))
     # If the space has a mine, return False
@@ -78,6 +83,8 @@ def clickspace(player_board, dimensions, newboard, row, col, input_history):
         for r in range(max(0,row-1), min(dimensions-1,row+1)+1):
             for c in range(max(0,col-1),min(dimensions-1,col+1)+1):
                 if (r,c) in input_history:
+                    continue
+                if player_board[r][c] == 'F':
                     continue
                 clickspace(player_board, dimensions, newboard, r, c, input_history)
     return True
@@ -99,6 +106,15 @@ def display(player_board):
             row = row + ' ' + str(j) + ' |'
         print(row + '\n' + horizontal)
 
+
+def place_flag(player_board,row,col):
+    if player_board[row][col] != ' ' and player_board[row][col] != 'F':
+        print("You can't put a flag here!")
+    elif player_board[row][col] == 'F':
+        player_board[row][col] = ' '
+    else:
+        player_board[row][col] = 'F'
+
 # Simple press to continue function
 def press_to_continue():
     os.system("/bin/bash -c 'read -s -n 1 -p \"\nPress any key to continue.\"'\n")
@@ -110,11 +126,11 @@ def play():
     print("Welcome to Minesweeper!")
     while True:
         difficulty = input("Please enter the difficulty you want to play on. \n"
-        'Easy mode: 5x5, 5 mines \n'
+        'Easy mode: 5x5, 4 mines \n'
         'Normal mode: 10 x 10, 10 mines \n').lower()
         if difficulty == "easy":
             dimensions = 5
-            max_mines = 5
+            max_mines = 4
             break
         elif difficulty == "normal":
             dimensions = 10
@@ -136,11 +152,16 @@ def play():
     while len(input_history) < dimensions ** 2 - max_mines:
         os.system("clear")
         display(player_board)
-        user_input = re.split(',(\\s)*', input("Please enter a coordinate (row,column) \n"))
-        row, col = int(user_input[0])-1, int(user_input[-1])-1
+        start_time = time.time()
+        user_input = re.split(r",\s*", input("Please enter a coordinate (row,column).\n To place a flag, type F after the coordinate (row,column,F) \n"))
+        row, col, flag = int(user_input[0])-1, int(user_input[1])-1, user_input[-1]
         if row < 0 or row >= dimensions or col < 0 or col >= dimensions:
             print("That is not a valid coordinate - please try again!")
             press_to_continue()
+            continue
+        
+        if flag == "f":
+            place_flag(player_board,row, col)
             continue
         
         safe = clickspace(player_board, dimensions, newboard, row, col, input_history)
@@ -149,6 +170,7 @@ def play():
     # Winning message when all empty spaces are revealed
     if safe:
         print("Congrats, you won!")
+        print(f"Your time was {int(time.time()-start_time)} seconds!")
         play_again = input("Would you like to play again? (y/n) \n").lower()
         if play_again == "y":
             play()
@@ -156,7 +178,8 @@ def play():
             print("Thanks for playing!")
     # Losing message when a mine is revealed
     else:
-        print("Game over!")
+        os.system("clear")
+        print("You stepped on a mine! Game over!")
         display(newboard)
         play_again = input("Would you like to play again? (y/n) \n").lower()
         if play_again == "y":
@@ -167,7 +190,6 @@ def play():
 play()
 # Flag function
 
-# Timer function
 
 #Play the game
 #User enters a coordinate on the board
