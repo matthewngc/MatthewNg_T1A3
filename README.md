@@ -1,5 +1,35 @@
 # Matthew Ng - T1A3 Terminal Application
 
+---
+
+## Table of Contents
+
+[**Link to Source Control Repository (R4)**](#link-to-source-control-repository-r4)
+
+[**Overview of Terminal Application**](#overview-of-terminal-application)
+
+[**Flow Chart**](#flow-chart)
+
+[**Features (R6)**](#features-r6)
+
+- [Feature 1: Revealing Spaces](#feature-1-revealing-spaces)
+- [Feature 2: Adjacent Mines](#feature-2-adjacent-mines)
+- [Feature 3: Recursive Digging](#feature-3-recursive-digging)
+- [Feature 4: Flags](#feature-4-flags)
+- [Feature 5: In-Game Timer](#feature-5-in-game-timer)
+- [Feature 6: Difficulty Setting](#feature-6-difficulty-setting)
+
+[**Function Tests**](#function-tests)
+
+[**Implementation Plan (R7)**](#implementation-plan-r7)
+
+[**Installation Instructions**](#installation-instructions-r8)
+
+[**Style Guide (R5)**](#style-guide-r5)
+
+[**Referenced Sources (R3)**](#referenced-sources-r3)
+
+
 ## Link to Source Control Repository (R4)
 
 ### [Github Repo](https://github.com/matthewngc/MatthewNg_T1A3)
@@ -14,7 +44,7 @@ The purpose of this terminal application is to recreate the popular game of Mine
 
 This terminal application will aim to reproduce these key game mechanics, as well as implement features such as the ability to place flags, a functional timer, and multiple difficulty options.
 
-## Flow-chart
+## Flow Chart
 
 ![Flow Chart](docs/flowchart.png)
 
@@ -265,7 +295,87 @@ As shown in the code snippet above, the input function is nested within a 'while
 
 ## Function Tests
 
-Three tests have been designed and performed to ensure that the main features of the application are  
+Three tests have been designed and performed to ensure that the main features of the application are running as expected. Pytest was used to perform these tests with no exceptions.
+
+![Pytest Results](docs/pytest.PNG)
+
+### **Test 1: createboard() function creates a board that is not empty**
+
+The first test is performed on the createboard() function, and checks that it returns board that is not an empty board. This check ensures that the mines and adjacent_mines values are assigned to the board.
+
+This function is one of the most crucial parts of the application as it generates the initial board that the game will be based on. As such, it is important for this function to work as expected.
+
+The test function is as follows:
+
+```python
+def test_createboard():
+    """Test createboard() function"""
+    # Set test dimension parameter as between 5 and 10
+    dimensions = random.randint(5,10)
+    # Max mines must be greater than 0 and less than the total number of spaces
+    max_mines = random.randint(1,dimensions**2-1)
+    # Tests that the board returned by this function NOT EMPTY for any given parameters
+    assert createboard(dimensions,max_mines) != [[' ' for i in range(dimensions)] for j in range(dimensions)]
+```
+
+### **Test 2: show_space() function returns the appropriate value**
+
+The second test is performed on the show_space() function, and checks that for the coordinate with a mine, the function returns False, and for coordinates that do not have a mine, the function returns True.
+
+This function is the means through which the player interacts with the game, and is one of the essential functions of Feature 1.
+
+The test function is as follows:
+
+```python
+def test_show_space():
+    """Test show_space function"""
+    # Default parameters
+    dimensions = 5
+    player_board = [[' ' for i in range(dimensions)] for j in range(dimensions)]
+    input_history = set()
+    # Dummy board that has a mine at (0, 0) only
+    newboard = [['@',1,0,0,0],
+                [1,1,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0]]
+    # Set row & col to the board position with the mine
+    row = 0
+    col = 0
+    # Tests that the function will return False when the input coordinate has a mine
+    assert show_space(player_board, dimensions, newboard, row, col, input_history) is False
+    # Tests that the function will return True when the input coordinate does not have a mine
+    for i in range(1,5):
+        for j in range(1,5):
+            assert show_space(player_board, dimensions, newboard, row+i, col+j, input_history) is True
+```
+
+### **Test 3: show_adjacent_mines() function returns the correct value**
+
+The third test is performed on the show_adjacent_mines function, and checks that for a dummy board with one mine, the spaces around the mine returns a value of 1.
+
+This function forms the basis for Feature 2 to perform as expected.
+
+The test function is as follows:
+
+```python
+def test_check_mines():
+    # Default dimension parameter
+    dimensions = 5
+    # Dummy board with mine located at row = 2, col = 2
+    board = [[0,0,0,0,0],
+            [0,0,0,0,0],
+            [0,0,'@',0,0],
+            [0,0,0,0,0],
+            [0,0,0,0,0]]
+    # Mine location
+    row = 2
+    col = 2
+    # Tests that all 8 spaces around the mine will return adjacent_mine = 1
+    for i in range(1,2):
+        for j in range(1,2):
+            assert check_mines(dimensions, board, row+i, col+j) == 1
+```
 
 ## Implementation Plan (R7)
 
@@ -301,11 +411,17 @@ See below for screenshots of the Trello board for this project, as well as the l
 
 4. Change the permissions on the script file by running the following command:
 
-   ```chmod +x /src/game.sh```
+   ```chmod +x src/game.sh```
 
 5. To run the terminal application, use the following command:
 
     ```./src/game.sh```
+
+## System Dependencies & Requirements
+
+There are no system dependencies or hardware requirements for this application.
+
+This application will require Python to run. If you don't have Python installed, please visit <https://python.org/downloads/> to download the latest version.
 
 ## Style Guide (R5)
 
