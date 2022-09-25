@@ -187,7 +187,7 @@ The code for this feature is as follows:
 
 Per above, the parameters of dimensions and max_mines varies depending on the difficulty that the user selects. These parameters are subsequently passed into several functions in order to generate the board and continue through the game.
 
-## Test Cases ##
+## Test Cases
 
 ### Test Case 1: User enters an invalid coordinate
 
@@ -284,8 +284,8 @@ See below for screenshots of the Trello board for this project, as well as the l
 
 ## Style Guide (R5)
 
-The python code for this project conforms to the standard set out in the PEP 8 Style Guide for Python (https://peps.python.org/pep-0008/).
+The python code for this project conforms to the standards set out in the PEP 8 Style Guide for Python.
 
 ## Referenced Sources (R3)
 
-[PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/) 
+[PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/)
