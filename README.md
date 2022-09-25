@@ -20,7 +20,7 @@ This terminal application will aim to reproduce these key game mechanics, as wel
 
 ## Features (R6)
 
-### *Feature 1: Revealing Spaces*
+### **Feature 1: Revealing Spaces**
 
 The premise of a Minesweeper game is to reveal all the empty spaces on the grid without hitting a single mine. As such, the feature that forms the basis of the game is the functionality to reveal a specific space based on a user input.
 
@@ -47,7 +47,75 @@ def show_space(player_board, dimensions, newboard, row, col, input_history):
 
 Essentially, the above function matches the coordinates entered by the player with the respective value on the hidden board. If this value is not a mine, the respective position on the player board is replaced with this value, and the game will continue. However, if the value is a mine (represented by '@'), the loop within the play function will break, and the game will end.
 
-### *Feature 2: Adjacent Mines*
+### *Error Handling: If user enters an invalid coordinate*
+
+The play function uses a 'while' loop to repeatedly prompt the player to enter a coordinate until a valid coordinate is input. If the user enters an invalid coordinate, the following if statements will return an error prompt based on the user input:
+
+1. **If too many coordinates are entered:**
+
+    ```python
+            user_input = re.split(r"[-;,.\s]\s*", input("Please enter a coordinate (row,column). \nTo place a flag, type F after the coordinate (row,column,F) \n"))
+            if len(user_input) > 3:
+                print("You've entered too many coordinates! Please try again.")
+                press_to_continue()
+                continue
+    ```
+
+    The application returns the message "You've entered too many coordinates! Please try again."
+
+2. **If too few coordinates are entered:**
+
+    ```python
+            if len(user_input) < 2:
+                print("You haven't entered enough coordinates! Please try again.")
+                press_to_continue()
+                continue
+    ```
+
+    The application returns the message "You haven't entered enough coordinates! Please try again."
+
+3. **If a coordinate that is out of range is entered, or the coordinate are not integers:**
+
+    ```python
+            try:
+                row, col, flag = int(user_input[0])-1, int(user_input[1])-1, user_input[-1]
+            except ValueError:
+                print("That is not a valid coordinate - please try again!")
+                press_to_continue()
+                continue
+            if len(user_input) == 2:
+                if row < 0 or row >= dimensions or col < 0 or col >= dimensions:
+                    print("That is not a valid coordinate - please try again!")
+                    press_to_continue()
+                    continue
+    ```
+
+    The application returns the message "That is not a valid coordinate - please try again!"
+
+### *Error Handling: User enters a coordinate that is already revealed or flagged*
+
+There are two if statements included within the show_space function that will prompt a message when the player attempts to reveal a space that has already been revealed, or a space that is flagged. See below for these two if statements:
+
+```python
+    if player_board[row][col] == 'F':
+        print("There is a flag here! Type 'F' after the coordinate to remove the flag (row,col,F).")
+        press_to_continue()
+        return True
+    if player_board[row][col] == newboard[row][col]:
+        print("You have already revealed this spot! Please enter a different coordinate.")
+        press_to_continue()
+        return True
+```
+
+### *Error Handling: Player enters a space in front of the coordinate*
+
+A ValueError occurs if there is a space preceding the coordinate. This is due to the nature of the re.split method, which will return the space as an empty string, i.e. if the player inputs ' 3, 3, F', using re.split on the input will return the list [' ', '3', '3,', 'F']. As such, the following code is used to remove the empty string in the user_input list:
+
+```python
+    user_input = list(filter(None, user_input))
+```
+
+### **Feature 2: Adjacent Mines**
 
 At the core of a game of Minesweeper, the most essential feature is the display of adjacent mines for any given empty space. By showing these adjacent mines as hints, a player is able to complete a game of Minesweeper without landing on any mines.
 
@@ -96,7 +164,7 @@ def show_adjacent_mines(dimensions, board):
 
 The 'for' loops in the above function will ensure that each empty space on the board is assigned a value representing the number of mines adjacent to this space.
 
-### *Feature 3: Recursive Digging*
+### **Feature 3: Recursive Digging**
 
 One of the quality-of-life features of the original Minesweeper game is the ability to recursively dig through empty tiles until an empty tile that is adjacent to mines is revealed. Upon understanding the logic behind Feature 1, it is relatively straightforward to achieve this recursive algorithm within the show_space function using the following code:
 
@@ -117,7 +185,7 @@ One of the quality-of-life features of the original Minesweeper game is the abil
 
 In essence, the above code snippet states that if a space is revealed and the value is zero, then the show_space function will be repeatedly performed on the adjacent tiles in each direction until a tile with adjacent mines, that is, any empty tiles with a value greater than zero, is reached, or a flag is reached, at which point the loop ends and the player is prompted to select another tile.
 
-### *Feature 4: Flags*
+### **Feature 4: Flags**
 
 Another user-friendly feature of the original Minesweeper game is the flagging function, which allows the player to place a flag on the spaces where they believe a mine is located. This flagging feature is not only useful as a visual aid to assist the player in completing the game, but also prevents the player from accidentally selecting a tile that they know is a mine.
 
@@ -133,7 +201,11 @@ def place_flag(player_board, row, col):
         player_board[row][col] = 'F'
 ```
 
-Per the above function, the player can place a flag on a space by including an 'F' after the coordinate of the space. They can also remove a flag by repeating this step. Considerations have also been included in the show_space function to prevent a flagged tile from being revealed:
+Per the above function, the player can place a flag on a space by including an 'F' after the coordinate of the space. They can also remove a flag by repeating this step.
+
+### *Error Handling: If the player attempts to reveal a flagged space*
+
+Considerations have been included in the show_space function to prevent a flagged tile from being revealed by using the below if statement:
 
 ```python
     if player_board[row][col] == 'F':
@@ -142,7 +214,7 @@ Per the above function, the player can place a flag on a space by including an '
         return True
 ```
 
-### *Feature 5: In-Game Timer*
+### **Feature 5: In-Game Timer**
 
 An in-game timer has also been implemented in this terminal application to allow players to see how long it took for them to complete the game. The timer is achieved by importing the time() method from the time module and using the following code within the play function:
 
@@ -159,7 +231,7 @@ An in-game timer has also been implemented in this terminal application to allow
 
 The time() method returns the time in seconds since the epoch (January 1, 1970, 00:00:00 (UTC)). By assigning a variable to time.time() when the Minesweeper game is initiated and taking the difference between this variable and the time.time() at which the game is completed, a timer function can be replicated.
 
-### *Feature 6: Difficulty Setting*
+### **Feature 6: Difficulty Setting**
 
 The final feature of this terminal application is a difficulty setting, which is common in many variations of Minesweeper. This difficulty setting is based on an input from the user confirming which difficulty they would like to play on. The difficulty selected will define the paramaters at which the board is generated, varying in the dimensions of the board and the number of mines placed on the board. For now, there are only two difficulty levels available to be played on this version of the terminal application.
 
@@ -187,67 +259,9 @@ The code for this feature is as follows:
 
 Per above, the parameters of dimensions and max_mines varies depending on the difficulty that the user selects. These parameters are subsequently passed into several functions in order to generate the board and continue through the game.
 
-## Test Cases
+### *Error Handling: If the player enters a difficulty that is invalid*
 
-### Test Case 1: User enters an invalid coordinate
-
-If the user enters an invalid coordinate, the following statements will return an error prompt based on the user input:
-
-If too many coordinates are entered:
-
-```python
-        user_input = re.split(r"[-;,.\s]\s*", input("Please enter a coordinate (row,column). \nTo place a flag, type F after the coordinate (row,column,F) \n"))
-        if len(user_input) > 3:
-            print("You've entered too many coordinates! Please try again.")
-            press_to_continue()
-            continue
-```
-
-The application returns the message "You've entered too many coordinates! Please try again."
-
-If too few coordinates are entered:
-
-```python
-        if len(user_input) < 2:
-            print("You haven't entered enough coordinates! Please try again.")
-            press_to_continue()
-            continue
-```
-
-The application returns the message "You haven't entered enough coordinates! Please try again."
-
-If a coordinate that is out of range is entered, or the coordinate are not integers:
-
-```python
-        try:
-            row, col, flag = int(user_input[0])-1, int(user_input[1])-1, user_input[-1]
-        except ValueError:
-            print("That is not a valid coordinate - please try again!")
-            press_to_continue()
-            continue
-        if len(user_input) == 2:
-            if row < 0 or row >= dimensions or col < 0 or col >= dimensions:
-                print("That is not a valid coordinate - please try again!")
-                press_to_continue()
-                continue
-```
-
-The application returns the message "That is not a valid coordinate - please try again!"
-
-### Test Case 2: User enters a coordinate that is already revealed or flagged
-
-For the show space feature, there are two statements included within the function that will prompt a message when the player attempts to reveal a space that has already been revealed, or a space that is flagged. See below for these two statements:
-
-```python
-    if player_board[row][col] == 'F':
-        print("There is a flag here! Type 'F' after the coordinate to remove the flag (row,col,F).")
-        press_to_continue()
-        return True
-    if player_board[row][col] == newboard[row][col]:
-        print("You have already revealed this spot! Please enter a different coordinate.")
-        press_to_continue()
-        return True
-```
+As shown in the code snippet above, the input function is nested within a 'while' loop in order to repeatedly prompt the player to enter a difficulty until a valid difficulty is entered.
 
 ## Implementation Plan (R7)
 
@@ -280,7 +294,7 @@ See below for screenshots of the Trello board for this project, as well as the l
 
 3. In order to run the terminal application, use the following command:
 
-    ```src/game.sh```
+    ```./src/game.sh```
 
 ## Style Guide (R5)
 

@@ -40,7 +40,8 @@ def place_flag(player_board, row, col):
     """Function to place a flag"""
     # If the space has already been revealed or already has a flag, prevent a flag from being placed
     if player_board[row][col] != ' ' and player_board[row][col] != 'F':
-        print("You can't put a flag here!")
+        print("This space has already been revealed! Please select a different space to flag.")
+        press_to_continue()
     # If the space already has a flag, remove the flag
     elif player_board[row][col] == 'F':
         player_board[row][col] = ' '

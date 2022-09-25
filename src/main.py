@@ -41,6 +41,7 @@ def play():
         os.system("clear")
         display_board(player_board)
         user_input = re.split(r"[-;,.\s]\s*", input("Please enter a coordinate (row,column). \nTo place a flag, type F after the coordinate (row,column,F) \n"))
+        user_input = list(filter(None, user_input))
         if len(user_input) > 3:
             print("You've entered too many coordinates! Please try again.")
             press_to_continue()
@@ -61,7 +62,7 @@ def play():
                 press_to_continue()
                 continue
         if len(user_input) == 3:
-            if flag == "f":
+            if flag.lower() == "f":
                 place_flag(player_board,row, col)
                 continue
             else:
