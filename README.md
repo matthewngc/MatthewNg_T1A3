@@ -6,7 +6,7 @@
 
 ### [Presentation Video]()
 
-### [Presentation Slides]()
+### [Presentation Slides](ppt/slides.pdf)
 
 ## Overview of Terminal Application
 
@@ -109,7 +109,7 @@ One of the quality-of-life features of the original Minesweeper game is the abil
                     continue
                 if player_board[r][c] == 'F':
                     continue
-                clickspace(player_board, dimensions, newboard, r, c, input_history)
+                show_space(player_board, dimensions, newboard, r, c, input_history)
     if newboard[row][col] > 0:
         player_board[row][col] = newboard[row][col]
         return True    
@@ -187,6 +187,68 @@ The code for this feature is as follows:
 
 Per above, the parameters of dimensions and max_mines varies depending on the difficulty that the user selects. These parameters are subsequently passed into several functions in order to generate the board and continue through the game.
 
+## Test Cases ##
+
+### Test Case 1: User enters an invalid coordinate
+
+If the user enters an invalid coordinate, the following statements will return an error prompt based on the user input:
+
+If too many coordinates are entered:
+
+```python
+        user_input = re.split(r"[-;,.\s]\s*", input("Please enter a coordinate (row,column). \nTo place a flag, type F after the coordinate (row,column,F) \n"))
+        if len(user_input) > 3:
+            print("You've entered too many coordinates! Please try again.")
+            press_to_continue()
+            continue
+```
+
+The application returns the message "You've entered too many coordinates! Please try again."
+
+If too few coordinates are entered:
+
+```python
+        if len(user_input) < 2:
+            print("You haven't entered enough coordinates! Please try again.")
+            press_to_continue()
+            continue
+```
+
+The application returns the message "You haven't entered enough coordinates! Please try again."
+
+If a coordinate that is out of range is entered, or the coordinate are not integers:
+
+```python
+        try:
+            row, col, flag = int(user_input[0])-1, int(user_input[1])-1, user_input[-1]
+        except ValueError:
+            print("That is not a valid coordinate - please try again!")
+            press_to_continue()
+            continue
+        if len(user_input) == 2:
+            if row < 0 or row >= dimensions or col < 0 or col >= dimensions:
+                print("That is not a valid coordinate - please try again!")
+                press_to_continue()
+                continue
+```
+
+The application returns the message "That is not a valid coordinate - please try again!"
+
+### Test Case 2: User enters a coordinate that is already revealed or flagged
+
+For the show space feature, there are two statements included within the function that will prompt a message when the player attempts to reveal a space that has already been revealed, or a space that is flagged. See below for these two statements:
+
+```python
+    if player_board[row][col] == 'F':
+        print("There is a flag here! Type 'F' after the coordinate to remove the flag (row,col,F).")
+        press_to_continue()
+        return True
+    if player_board[row][col] == newboard[row][col]:
+        print("You have already revealed this spot! Please enter a different coordinate.")
+        press_to_continue()
+        return True
+```
+
 ## Implementation Plan (R7)
 
 For the implementation plan of this project, the online project management tool Trello was used to draft up an outline of the plan for the overall project, as well as checklists for each individual feature. Labels were used to identify which features are the most important to complete first in order to have the game working, and which features can be implemented later or are optional. Due dates are also set for each task in the project in order to gauge the overall progress and time management.
@@ -211,8 +273,21 @@ See below for screenshots of the Trello board for this project, as well as the l
 
 ## Installation Instructions (R8)
 
+1. Open your terminal and create a new directory
+2. Open this directory and enter the following command in terminal:
+
+   ```git clone https://github.com/matthewngc/MatthewNg_T1A3```
+
+3. Move to the src folder by using the following command:
+
+    ```cd src```
+
+4. In order to run the terminal application, use the following command:
+
+    ```.src/app.sh```
+
 ## Style Guide (R5)
 
-https://peps.python.org/pep-0008/
+The python code for this project conforms to the standard set out in the PEP 8 Style Guide for Python (https://peps.python.org/pep-0008/).
 
 ## Referenced Sources (R3)
