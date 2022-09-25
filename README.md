@@ -4,7 +4,7 @@
 
 ### [Github Repo](https://github.com/matthewngc/MatthewNg_T1A3)
 
-### [Presentation Video]()
+### [Presentation Video](https://youtu.be/PrDPhP2G2vY)
 
 ### [Presentation Slides](ppt/slides.pdf)
 
@@ -278,16 +278,14 @@ See below for screenshots of the Trello board for this project, as well as the l
 
    ```git clone https://github.com/matthewngc/MatthewNg_T1A3```
 
-3. Move to the src folder by using the following command:
+3. In order to run the terminal application, use the following command:
 
-    ```cd src```
-
-4. In order to run the terminal application, use the following command:
-
-    ```.src/app.sh```
+    ```src/game.sh```
 
 ## Style Guide (R5)
 
 The python code for this project conforms to the standard set out in the PEP 8 Style Guide for Python (https://peps.python.org/pep-0008/).
 
 ## Referenced Sources (R3)
+
+[PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/) 
