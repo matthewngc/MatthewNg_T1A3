@@ -14,6 +14,10 @@ The purpose of this terminal application is to recreate the popular game of Mine
 
 This terminal application will aim to reproduce these key game mechanics, as well as implement features such as the ability to place flags, a functional timer, and multiple difficulty options.
 
+## Flow-chart
+
+![Flow Chart](docs/flowchart.png)
+
 ## Features (R6)
 
 ### *Feature 1: Revealing Spaces*
