@@ -29,8 +29,6 @@ def createboard(dimensions, max_mines):
     show_adjacent_mines(dimensions, board)
     return board
 
-
-
 # Check the number of mines around each space
 def check_mines(dimensions, board, row, col):
     """Function to check the number of adjacent mines around each space"""

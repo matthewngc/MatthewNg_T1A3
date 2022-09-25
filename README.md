@@ -1,7 +1,5 @@
 # Matthew Ng - T1A3 Terminal Application
 
-## Referenced Sources (R3)
-
 ## Link to Source Control Repository (R4)
 
 ### [Github Repo](https://github.com/matthewngc/MatthewNg_T1A3)
@@ -10,11 +8,9 @@
 
 ### [Presentation Slides]()
 
-## Style Guide (R5)
-
 ## Overview of Terminal Application
 
-The purpose of this terminal application is to recreate the popular game of Minesweeper that can be played within the terminal. The goal of Minesweeper is to reveal all the empty tiles on a grid, without revealing any mines that are hidden throughout the grid. The game ends when all the empty tiles are cleared on the grid, or when a mine is revealed. 
+The purpose of this terminal application is to recreate the popular game of Minesweeper that can be played within the terminal. The goal of Minesweeper is to reveal all the empty tiles on a grid, without revealing any mines that are hidden throughout the grid. The game ends when all the empty tiles are cleared on the grid, or when a mine is revealed.
 
 This terminal application will aim to reproduce these key game mechanics, as well as implement features such as the ability to place flags, a functional timer, and multiple difficulty options.
 
@@ -55,7 +51,7 @@ To understand how this feature is to be implemented, it is important to understa
 
 For any given space ( 0 , 0 ) on a Minesweeper board, the surrounding spaces are defined as follows:
 
-```
+```python
        (-1,-1 ) (-1,0 ) (-1,1 )
        ( 0,-1 ) ( 0,0 ) ( 0,1 )
        ( 1,-1 ) ( 1,0 ) ( 1,1 )
@@ -189,5 +185,30 @@ Per above, the parameters of dimensions and max_mines varies depending on the di
 
 ## Implementation Plan (R7)
 
+For the implementation plan of this project, the online project management tool Trello was used to draft up an outline of the plan for the overall project, as well as checklists for each individual feature. Labels were used to identify which features are the most important to complete first in order to have the game working, and which features can be implemented later or are optional. Due dates are also set for each task in the project in order to gauge the overall progress and time management.
+
+See below for screenshots of the Trello board for this project, as well as the labels and checklists for each of the features:
+
+![Trello Board](docs/trello_board.PNG)
+
+![Trello Labels](docs/trello_labels.PNG)
+
+![Trello Feature 1](docs/trello_feature1.PNG)
+
+![Trello Feature 2](docs/trello_feature2.PNG)
+
+![Trello Feature 3](docs/trello_feature3.PNG)
+
+![Trello Feature 4](docs/trello_feature4.PNG)
+
+![Trello Feature 5](docs/trello_feature5.PNG)
+
+![Trello Feature 6](docs/trello_feature6.PNG)
+
 ## Installation Instructions (R8)
 
+## Style Guide (R5)
+
+https://peps.python.org/pep-0008/
+
+## Referenced Sources (R3)
