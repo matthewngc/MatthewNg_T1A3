@@ -407,6 +407,7 @@ See below for screenshots of the Trello board for this project, as well as the l
    ```git clone https://github.com/matthewngc/MatthewNg_T1A3```
 
 3. Navigate into the folder by entering the following command:
+
    ```cd MatthewNg_T1A3```
 
 4. Change the permissions on the script file by running the following command:
