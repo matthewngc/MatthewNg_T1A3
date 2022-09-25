@@ -1,148 +1,10 @@
 """Import modules"""
-import random
 import os
 import re
 import time
-
-# Generate the board as a list of lists (this board is hidden from the player)
-def createboard(dimensions, max_mines):
-    """Function to create a new board and add mines"""
-    board = [[' ' for i in range(dimensions)] for j in range(dimensions)]
-
-    # Randomly generate mine locations and add them to the board
-    mines = 0
-    while mines < max_mines:
-        # Generate random row and column number between 0 and the dimensions of the grid
-        random_row = random.randint(0, dimensions -1)
-        random_col = random.randint(0, dimensions -1)
-
-        # Don't place a mine if the space already has a mine
-        if board[random_row][random_col] == '@':
-            continue
-        # Otherwise, plant mine
-        else:
-            board[random_row][random_col] = '@'
-        # Increase mine index by one
-        mines += 1
-
-    # Show the number of adjacent mines around each empty space
-    show_adjacent_mines(dimensions, board)
-    return board
-
-# Check the number of mines around each space
-def check_mines(dimensions, board, row, col):
-    """Function to check the number of adjacent mines around each space"""
-    # There are a total of eight spaces to check around each space, e.g. (ignoring (0,0)):
-    #   (-1,-1 ) (-1,0 ) (-1,1 )
-    #   ( 0,-1 ) ( 0,0 ) ( 0,1 )
-    #   ( 1,-1 ) ( 1,0 ) ( 1,1 )
-
-    adjacent_mines = 0
-
-    # Ranges must be in range of the board i.e. accounting for the edges of the board
-    for x in range(max(0,row-1), min(dimensions-1, row +1)+1):
-        for y in range (max(0,col-1), min(dimensions-1,col+1)+1):
-            # Don't check the space itself
-            if x == row and y == col:
-                continue
-            # Increase adjacent_mine index by 1 for every mine around the space
-            if board[x][y] == '@':
-                adjacent_mines += 1
-    # Return the number of adjacent mines around the space
-    return adjacent_mines
-
-# After the number of adjacent mines is counted, replace the space on the board with this number
-def show_adjacent_mines(dimensions, board):
-    """Function that assigns the adjacent mines value to the empty spaces"""
-    for x in range(dimensions):
-        for y in range(dimensions):
-            # Don't replace the spaces with a mine
-            if board[x][y] == '@':
-                continue
-            # Replace the space with the returned number from check_mines()
-            board[x][y] = check_mines(dimensions, board, x, y)
-
-# When a space is clicked on, reveal the space
-def clickspace(player_board, dimensions, newboard, row, col, input_history):
-    """Function to reveal the space entered by the player"""
-    if player_board[row][col] == 'F':
-        print("There is a flag here! Type 'F' after the coordinate to remove the flag (row,col,F).")
-        press_to_continue()
-        return True
-    # Add the coordinate entered to the input history to track what spaces have been clicked on
-    input_history.add((row,col))
-    # If the space has already been revealed, show error message and return True
-    if player_board[row][col] == newboard[row][col]:
-        print("You have already revealed this spot! Please enter a different coordinate.")
-        press_to_continue()
-        return True
-    # If the space has a mine, return False
-    if newboard[row][col] == '@':
-        return False
-    # If the space is empty but has adjacent mines, show the number of adjacent mines
-    if newboard[row][col] > 0:
-        player_board[row][col] = newboard[row][col]
-        return True
-    # If the space is empty and has no adjacent mines, keep revealing adjacent spaces until
-    # an empty space with adjacent mines is revealed
-    if newboard[row][col] == 0:
-        player_board[row][col] = newboard[row][col]
-        for r in range(max(0,row-1), min(dimensions-1,row+1)+1):
-            for c in range(max(0,col-1),min(dimensions-1,col+1)+1):
-                if (r,c) in input_history:
-                    continue
-                if player_board[r][c] == 'F':
-                    continue
-                clickspace(player_board, dimensions, newboard, r, c, input_history)
-    return True
-
-# Display the board to the player - this is what the player sees when playing the game
-def display(player_board):
-    """Function to display the board to the player"""
-    dim = len(player_board)
-    # Create top border of the board
-    topborder = '   ' + (4 * dim * '-') + '-'
-    # Label the x-axis of the board
-    xlabel = '     '
-    for i in range(1, dim + 1):
-        xlabel = xlabel + str(i) + '   '
-    print(xlabel + '\n' + topborder)
-    # Label the y-axis of the board
-    for idx, i in enumerate(player_board):
-        row = '{0:2} |'.format(idx + 1)
-        for j in i:
-            row = row + ' ' + str(j) + ' |'
-        print(row + '\n' + topborder)
-
-# Place a flag on a space that may be a mine
-def place_flag(player_board, row, col):
-    """Function to place a flag"""
-    # If the space has already been revealed or already has a flag, prevent a flag from being placed
-    if player_board[row][col] != ' ' and player_board[row][col] != 'F':
-        print("You can't put a flag here!")
-    # If the space already has a flag, remove the flag
-    elif player_board[row][col] == 'F':
-        player_board[row][col] = ' '
-    # If the space does not have a flag, place a flag
-    else:
-        player_board[row][col] = 'F'
-
-# Simple press to continue function
-def press_to_continue():
-    """Press to continue function"""
-    os.system("/bin/bash -c 'read -s -n 1 -p \"\nPress any key to continue.\"'\n")
-    os.system('clear')
-
-def replay():
-    while True:
-        play_again = input("Would you like to play again? (y/n) \n").lower()
-        if play_again == "y":
-            play()
-        elif play_again == "n":
-            print("Thanks for playing!")
-            break
-        else:
-            print("Invalid input - please enter 'y' or 'n'.")
+from makeboard import createboard, display_board
+from controls import show_space, place_flag
+from prompts import press_to_continue, replay
 
 # Play function
 def play():
@@ -177,7 +39,7 @@ def play():
     player_board = [[' ' for i in range(dimensions)] for j in range(dimensions)]
     while len(input_history) < dimensions ** 2 - max_mines:
         os.system("clear")
-        display(player_board)
+        display_board(player_board)
         user_input = re.split(r"[-;,.\s]\s*", input("Please enter a coordinate (row,column). \nTo place a flag, type F after the coordinate (row,column,F) \n"))
         if len(user_input) > 3:
             print("You've entered too many coordinates! Please try again.")
@@ -207,21 +69,29 @@ def play():
                 press_to_continue()
                 continue
 
-        emptyspace = clickspace(player_board, dimensions, newboard, row, col, input_history)
+        emptyspace = show_space(player_board, dimensions, newboard, row, col, input_history)
         if not emptyspace:
             break
     # Winning message when all empty spaces are revealed
     if emptyspace:
         os.system("clear")
         print("Congrats, you won!")
-        display(newboard)
+        display_board(newboard)
         print(f"Your time was {int(time.time()-start_time)} seconds!")
-        replay()
+        if replay() is False:
+            return
+        else:
+            play()
+
     # Losing message when a mine is revealed
     else:
         os.system("clear")
         print("You stepped on a mine! Game over!")
-        display(newboard)
-        replay()
+        display_board(newboard)
+        if replay() is False:
+            return
+        else:
+            play()
+
 
 play()
