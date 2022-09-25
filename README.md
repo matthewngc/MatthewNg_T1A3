@@ -263,6 +263,10 @@ Per above, the parameters of dimensions and max_mines varies depending on the di
 
 As shown in the code snippet above, the input function is nested within a 'while' loop in order to repeatedly prompt the player to enter a difficulty until a valid difficulty is entered.
 
+## Function Tests
+
+Three tests have been designed and performed to ensure that the main features of the application are  
+
 ## Implementation Plan (R7)
 
 For the implementation plan of this project, the online project management tool Trello was used to draft up an outline of the plan for the overall project, as well as checklists for each individual feature. Labels were used to identify which features are the most important to complete first in order to have the game working, and which features can be implemented later or are optional. Due dates are also set for each task in the project in order to gauge the overall progress and time management.
@@ -292,7 +296,14 @@ See below for screenshots of the Trello board for this project, as well as the l
 
    ```git clone https://github.com/matthewngc/MatthewNg_T1A3```
 
-3. In order to run the terminal application, use the following command:
+3. Navigate into the folder by entering the following command:
+   ```cd MatthewNg_T1A3```
+
+4. Change the permissions on the script file by running the following command:
+
+   ```chmod +x /src/game.sh```
+
+5. To run the terminal application, use the following command:
 
     ```./src/game.sh```
 
