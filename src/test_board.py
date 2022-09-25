@@ -1,6 +1,6 @@
 """Import modules"""
 import random
-from makeboard import createboard
+from makeboard import createboard, check_mines
 from controls import show_space
 
 def test_createboard():
@@ -14,7 +14,7 @@ def test_createboard():
 
 def test_show_space():
     """Test show_space function"""
-    # Dummy parameters
+    # Default parameters
     dimensions = 5
     player_board = [[' ' for i in range(dimensions)] for j in range(dimensions)]
     input_history = set()
@@ -33,3 +33,20 @@ def test_show_space():
     for i in range(1,5):
         for j in range(1,5):
             assert show_space(player_board, dimensions, newboard, row+i, col+j, input_history) is True
+
+def test_check_mines():
+    # Default dimension parameter
+    dimensions = 5
+    # Dummy board with mine located at row = 2, col = 2
+    board = [[0,0,0,0,0],
+            [0,0,0,0,0],
+            [0,0,'@',0,0],
+            [0,0,0,0,0],
+            [0,0,0,0,0]]
+    # Mine location
+    row = 2
+    col = 2
+    # Tests that all 8 spaces around the mine will return adjacent_mine = 1
+    for i in range(1,2):
+        for j in range(1,2):
+            assert check_mines(dimensions, board, row+i, col+j) == 1
